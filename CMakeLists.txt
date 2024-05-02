@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.29)
 project(xbridge_witnessd)
 
 if((CMAKE_CXX_COMPILER_ID STREQUAL "GNU") AND(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11))
@@ -7,6 +7,7 @@ elseif((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND(CMAKE_CXX_COMPILER_VERSION V
   message(FATAL_ERROR "Use clang >= 13.0")
 endif()
 
+message(WARNING "In XBWD: CMAKE_TOOLCHAIN_FILE ${CMAKE_TOOLCHAIN_FILE}")
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE OR "${CMAKE_TOOLCHAIN_FILE} " STREQUAL " ")
   set(conan_toolchain ${CMAKE_CURRENT_BINARY_DIR}/build/generators/conan_toolchain.cmake)
   if(NOT EXISTS "${conan_toolchain}")
@@ -20,8 +21,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_VERBOSE_MAKEFILE 1)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Builds/CMake")
-
-find_package(date REQUIRED)
+message(WARNING "In XBWD: CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}")
+# find_package(date REQUIRED)
 find_package(fmt REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(SOCI REQUIRED)
@@ -142,7 +143,7 @@ if(is_linux)
   target_link_options(${PROJECT_NAME} PUBLIC "LINKER:-z,relro,-z,now")
 endif()
 
-target_include_directories (${PROJECT_NAME} PRIVATE src ${date_INCLUDE_DIR})
+# target_include_directories (${PROJECT_NAME} PRIVATE src ${date_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     xrpl::libxrpl
@@ -153,7 +154,7 @@ target_link_libraries(${PROJECT_NAME}
     OpenSSL::Crypto
     OpenSSL::SSL
   )
-
+target_include_directories(${PROJECT_NAME} PUBLIC src/)
 if(san)
   target_compile_options(${PROJECT_NAME}
     INTERFACE
@@ -175,9 +176,10 @@ if(has_parent)
   set_target_properties(${PROJECT_NAME} PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD ON)
 endif()
 
-#fix for MAC
-get_target_property(FMT_INC_DIRS fmt::fmt INTERFACE_INCLUDE_DIRECTORIES)
-list(GET FMT_INC_DIRS 0 FMT_INC_DIR)
-target_include_directories(${PROJECT_NAME} BEFORE PRIVATE ${FMT_INC_DIR})
-
-include(packaging/package)
+#fix for MAC # TODO: Guard form macOS
+# if(APPLE)
+#   get_target_property(FMT_INC_DIRS fmt::fmt INTERFACE_INCLUDE_DIRECTORIES)
+#   list(GET FMT_INC_DIRS 0 FMT_INC_DIR)
+#   target_include_directories(${PROJECT_NAME} BEFORE PRIVATE ${FMT_INC_DIR})
+# endif()
+# include(packaging/package)
