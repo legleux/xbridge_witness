@@ -1,27 +1,49 @@
-name: "Package xbridge_witnessd"
+name: "Build xbridge_witnessd"
 on:
   push:
-    branches: ['main', 'release', 'develop', '*-rc[0-9]+', '*-b[0-9]+']
+    branches: [master, release/*, develop, unit_test_check]
+  pull_request:
+    branches: [master, release/*, develop]
   workflow_dispatch:
 
 jobs:
-  package:
+  build:
       name: Build
       runs-on: [self-hosted, x-heavy]
       container:
         image: gcc:11
       steps:
         - name: Checkout
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
 
-        - name: Build
-          uses: ./.github/actions/build
-
-        # - name: Run unit tests
+        # - name: Build
         #   uses: ./.github/actions/build
 
-        - name: Save server
-          uses: actions/upload-artifact@v3
+        - name: mk unit tests
+          run: mkdir -p build && echo "hi" > build/xbridge_witnessd
+
+        - name: Artifact
+          uses: actions/upload-artifact@v4
           with:
             name: xbwd
             path: build/xbridge_witnessd
+
+  test:
+      name: Run xbridge_witnessd unit tests
+      runs-on: ubuntu-latest
+      needs: build
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - uses: actions/download-artifact@master
+        - name: Find unit tests
+          run: |
+            find . -name xbridge_witnessd
+            ls -lah xbwd/xbridge_witnessd
+            chmod +x xbwd/xbridge_witnessd
+            ls -lah xbwd/xbridge_witnessd
+
+        - name: Run unit tests
+          run: cat xbwd/xbridge_witnessd
+          # run: build/xbridge_witnessd --unittest
