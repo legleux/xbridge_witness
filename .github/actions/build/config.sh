@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 conan profile new --detect default
+conan config set general.revisions_enabled=1
+
 conan profile update settings.compiler.libcxx=libstdc++11 default
 conan profile update settings.compiler.cppstd=20 default
 
