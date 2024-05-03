@@ -28,7 +28,7 @@ jobs:
 
   test:
       name: Run xbridge_witnessd unit tests
-      runs-on: ubuntu:latest
+      runs-on: [self-hosted, x-heavy]
       needs: build
       steps:
         - name: Checkout
