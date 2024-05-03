@@ -3,11 +3,9 @@
 set -ex
 
 root_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-owner=${owner:-rippled}
 source_dir=$(realpath ${source_dir:-$root_dir})
 build_dir=$(realpath ${build_dir:-$root_dir/build})
 build_config=Release
-git clone --depth 1 https://github.com/${owner}/${repo}.git
 
 NPROC=$(nproc)
 
