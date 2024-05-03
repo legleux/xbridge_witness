@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -ex
 
 root_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -10,8 +9,9 @@ build_config=Release
 NPROC=$(nproc)
 
 conan install ${source_dir} \
-    --output-folder ${build_dir} \
-    --build missing \
+    --install-folder=${build_dir} \
+    --output-folder=${build_dir} \
+    --build=missing \
     --settings build_type=${build_config}
 
 cmake -S ${source_dir} -B ${build_dir} \
@@ -20,4 +20,4 @@ cmake -S ${source_dir} -B ${build_dir} \
 
 cmake --build ${build_dir} --parallel $NPROC
 
-cmake --install ${build_dir} --prefix /opt/ripple --strip
+cmake --install ${build_dir} --prefix ${root_dir} --strip

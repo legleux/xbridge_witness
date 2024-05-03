@@ -8,8 +8,4 @@ runs:
 
     - name: Build
       shell: bash
-      run: |
-        source_dir=$GITHUB_WORKSPACE
-        . ./.github/actions/build/deps.sh
-        . ./.github/actions/build/config.sh
-        . ./.github/actions/build/build.sh
+      run: . ./.github/actions/build/build_xbwd.sh
