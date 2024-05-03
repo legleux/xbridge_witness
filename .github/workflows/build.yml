@@ -28,7 +28,7 @@ jobs:
 
   test:
       name: Run xbridge_witnessd unit tests
-      runs-on: ubuntu:20.04
+      runs-on: ubuntu:latest
       needs: build
       steps:
         - name: Checkout
