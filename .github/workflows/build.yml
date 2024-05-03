@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  package:
+  build:
       name: Build
       runs-on: [self-hosted, x-heavy]
       container:
@@ -18,10 +18,24 @@ jobs:
           uses: ./.github/actions/build
 
         - name: Run unit tests
-          run: ./xbridge_witnessd --unittest
+          run: ./build/xbridge_witnessd --unittest
 
         - name: Artifact
           uses: actions/upload-artifact@v3
           with:
             name: xbwd
-            path: ./xbridge_witnessd
+            path: ./build/xbridge_witnessd
+
+  test:
+      name: Run xbridge_witnessd unit tests
+      runs-on: ubuntu:20.04
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - uses: actions/download-artifact@master
+          with:
+            name: xbwd
+
+        - name: Run unit tests
+          run: ./xbridge_witnessd --unittest

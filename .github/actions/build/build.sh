@@ -3,7 +3,7 @@ set -ex
 
 root_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source_dir=$(realpath ${source_dir:-$root_dir})
-build_dir=$(realpath ${build_dir:-$root_dir/build})
+build_dir=$(realpath ${build_dir:-$source_dir/../build})
 build_config=Release
 
 NPROC=$(nproc)
@@ -19,5 +19,3 @@ cmake -S ${source_dir} -B ${build_dir} \
     -DCMAKE_TOOLCHAIN_FILE=${build_dir}/conan_toolchain.cmake
 
 cmake --build ${build_dir} --parallel $NPROC
-
-cmake --install ${build_dir} --prefix ${root_dir} --strip
