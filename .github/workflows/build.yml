@@ -13,37 +13,28 @@ jobs:
       container:
         image: gcc:11
       steps:
-        - name: Checkout
-          uses: actions/checkout@v4
+        - uses: actions/checkout@v4
 
-        # - name: Build
-        #   uses: ./.github/actions/build
+        - name: Build xbridge_witnessd
+          uses: ./.github/actions/build
 
-        - name: mk unit tests
-          run: mkdir -p build && echo "hi" > build/xbridge_witnessd
-
-        - name: Artifact
+        - name: Save xbridge_witnessd artifact
           uses: actions/upload-artifact@v4
           with:
-            name: xbwd
+            name: xbridge_witnessd
             path: build/xbridge_witnessd
 
   test:
       name: Run xbridge_witnessd unit tests
-      runs-on: ubuntu-latest
+      runs-on: ubuntu-20.04
       needs: build
       steps:
-        - name: Checkout
-          uses: actions/checkout@v4
+        - uses: actions/checkout@v4
 
         - uses: actions/download-artifact@master
-        - name: Find unit tests
-          run: |
-            find . -name xbridge_witnessd
-            ls -lah xbwd/xbridge_witnessd
-            chmod +x xbwd/xbridge_witnessd
-            ls -lah xbwd/xbridge_witnessd
 
         - name: Run unit tests
-          run: cat xbwd/xbridge_witnessd
-          # run: build/xbridge_witnessd --unittest
+          run: |
+            ls -lh xbridge_witnessd/xbridge_witnessd
+            chmod u+x xbridge_witnessd/xbridge_witnessd
+            xbridge_witnessd/xbridge_witnessd --unittest
