@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(xbridge_witnessd)
 
+set(tests ON CACHE BOOL "Enable unit tests")
+set(static ON CACHE BOOL "Link xbridge_witnessd statically")
+
 if((CMAKE_CXX_COMPILER_ID STREQUAL "GNU") AND(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11))
   message(FATAL_ERROR "Use gcc >= 11.0")
 elseif((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13))
@@ -116,7 +119,6 @@ set(SOURCES
   src/xbwd/rpc/ServerHandler.cpp
 )
 
-option(tests "Enable unit tests" ON)
 
 if(tests)
   set(UNIT_TESTS
@@ -140,6 +142,13 @@ install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 target_compile_options(${PROJECT_NAME} PUBLIC "-fstack-protector-strong")
 if(is_linux)
   target_link_options(${PROJECT_NAME} PUBLIC "LINKER:-z,relro,-z,now")
+endif()
+
+if(static)
+  target_link_options(${PROJECT_NAME} PRIVATE -static)
+  if (is_gcc AND NOT san)
+    target_link_options(${PROJECT_NAME} PRIVATE -static-libstdc++ -static-libgcc)
+  endif()
 endif()
 
 target_include_directories (${PROJECT_NAME} PRIVATE src ${date_INCLUDE_DIR})
