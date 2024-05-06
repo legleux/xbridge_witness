@@ -25,6 +25,7 @@ jobs:
         - name: Artifact
           uses: actions/upload-artifact@v4
           with:
+            name: xbwd
             path: build/xbridge_witnessd
 
   test:
@@ -39,10 +40,10 @@ jobs:
         - name: Find unit tests
           run: |
             find . -name xbridge_witnessd
-            ls -lah build/xbridge_witnessd
-            chmod +x build/xbridge_witnessd
-            ls -lah build/xbridge_witnessd
+            ls -lah xbwd/xbridge_witnessd
+            chmod +x xbwd/xbridge_witnessd
+            ls -lah xbwd/xbridge_witnessd
 
         - name: Run unit tests
-          run: cat build/xbridge_witnessd
+          run: cat xbwd/xbridge_witnessd
           # run: build/xbridge_witnessd --unittest
