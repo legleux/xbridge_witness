@@ -1,7 +1,9 @@
 name: "Build xbridge_witnessd"
 on:
   push:
-    branches: ['main', 'release', 'develop', '*-rc[0-9]+', '*-b[0-9]+']
+    branches: [master, release/*, develop, unit_test_check]
+  pull_request:
+    branches: [master, release/*, develop]
   workflow_dispatch:
 
 jobs:
