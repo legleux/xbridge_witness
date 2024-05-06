@@ -20,7 +20,7 @@ jobs:
         #   uses: ./.github/actions/build
 
         - name: mk unit tests
-          run: mkdir -p build/xbridge_witnessd && echo "hi" > xbridge_witnessd
+          run: mkdir -p build/xbridge_witnessd && echo "hi" > build/xbridge_witnessd
 
         - name: Artifact
           uses: actions/upload-artifact@v4
@@ -29,7 +29,7 @@ jobs:
 
   test:
       name: Run xbridge_witnessd unit tests
-      runs-on: [self-hosted, x-heavy]
+      runs-on: ubuntu-latest
       needs: build
       steps:
         - name: Checkout
@@ -37,7 +37,11 @@ jobs:
 
         - uses: actions/download-artifact@master
         - name: Find unit tests
-          run: find . -name xbridge_witnessd
+          run: |
+            find . -name xbridge_witnessd
+            ls -lah build/xbridge_witnessd
+            chmod +x build/xbridge_witnessd
+            ls -lah build/xbridge_witnessd
 
         - name: Run unit tests
           run: cat build/xbridge_witnessd
