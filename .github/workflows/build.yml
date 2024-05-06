@@ -20,7 +20,7 @@ jobs:
         #   uses: ./.github/actions/build
 
         - name: mk unit tests
-          run: mkdir -p build/xbridge_witnessd && echo "hi" > build/xbridge_witnessd
+          run: mkdir -p build && echo "hi" > build/xbridge_witnessd
 
         - name: Artifact
           uses: actions/upload-artifact@v4
