@@ -12,19 +12,19 @@ jobs:
         image: gcc:11
       steps:
         - name: Checkout
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
 
         - name: Build
-          uses: ./.github/actions/build
+          uses: .github/actions/build
 
         - name: Run unit tests
-          run: ./build/xbridge_witnessd --unittest
+          run: build/xbridge_witnessd --unittest
 
         - name: Artifact
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
             name: xbwd
-            path: ./build/xbridge_witnessd
+            path: build/xbridge_witnessd
 
   test:
       name: Run xbridge_witnessd unit tests
@@ -32,11 +32,10 @@ jobs:
       needs: build
       steps:
         - name: Checkout
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
 
         - uses: actions/download-artifact@master
-          with:
-            name: xbwd
-
+        - name: Find unit tests
+          run: find . -name xbridge_witnessd
         - name: Run unit tests
-          run: ./xbridge_witnessd --unittest
+          run: build/xbridge_witnessd --unittest
