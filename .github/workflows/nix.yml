@@ -61,6 +61,7 @@ jobs:
               cc: /usr/bin/clang-14
               cxx: /usr/bin/clang++-14
     runs-on: [self-hosted, x-heavy]
+    name: ${{ matrix.configuration }} - ${{ matrix.compiler }} - ${{ matrix.compiler.profile.version }}
     container: rippleci/rippled-build-ubuntu:aaf5e3e
     env:
       build_dir: .build
@@ -157,7 +158,7 @@ jobs:
 
       - name: test
         run: |
-          ${build_dir}/xbridge_witnessd --unittest --unittest-jobs $(nproc)
+          ${build_dir}/xbridge_witnessd --unittest
 
   # coverage:
   #   strategy:
