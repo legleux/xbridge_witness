@@ -1,4 +1,5 @@
 name: macos
+run-name: Build macOS
 on:
   pull_request:
   push:
