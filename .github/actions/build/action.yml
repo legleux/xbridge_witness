@@ -1,11 +1,33 @@
-name: "Build xbridge_witnessd"
-description: ""
+name: build
+inputs:
+  generator:
+    default: null
+  configuration:
+    required: true
+  cmake-args:
+    default: null
+  cmake-target:
+    default: all
+# An implicit input is the environment variable `build_dir`.
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Build
+    - name: configure
       shell: bash
-      run: . ./.github/actions/build/build_xbwd.sh
+      run: |
+        cd ${build_dir}
+        cmake \
+          ${{ inputs.generator && format('-G "{0}"', inputs.generator) || '' }} \
+          -DCMAKE_TOOLCHAIN_FILE:FILEPATH=${build_dir}/conan_toolchain.cmake \
+          -DCMAKE_BUILD_TYPE=${{ inputs.configuration }} \
+          ${{ inputs.cmake-args }} \
+          ..
+
+    - name: build
+      shell: bash
+      run: |
+        cmake \
+          --build ${build_dir} \
+          --config ${{ inputs.configuration }} \
+          --parallel ${NUM_PROCESSORS:-$(nproc)} \
+          --target ${{ inputs.cmake-target }}
