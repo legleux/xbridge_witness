@@ -61,7 +61,7 @@ jobs:
               cc: /usr/bin/clang-14
               cxx: /usr/bin/clang++-14
     runs-on: [self-hosted, x-heavy]
-    name: ${{ matrix.configuration }} - ${{ matrix.compiler }} - ${{ matrix.compiler.profile.version }}
+    name: ${{ matrix.compiler }} - ${{ matrix.configuration }} - ${{ matrix.profile.version }}
     container: rippleci/rippled-build-ubuntu:aaf5e3e
     env:
       build_dir: .build
