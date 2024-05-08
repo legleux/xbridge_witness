@@ -1,12 +1,17 @@
 name: build
+description: "Build xbridge_witnessd"
 inputs:
   generator:
+    description: "CMake generator"
     default: null
   configuration:
+    description: "CMake CMAKE_BUILD_TYPE"
     required: true
   cmake-args:
+    description: "Additional args to pass to CMake"
     default: null
   cmake-target:
+    description: "CMake's build --target argument"
     default: all
 # An implicit input is the environment variable `build_dir`.
 runs:
