@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+
 project(xbridge_witnessd)
 
 set(tests ON CACHE BOOL "Enable unit tests")
@@ -104,7 +105,6 @@ set(SOURCES
   src/xbwd/rpc/RPCHandler.cpp
   src/xbwd/rpc/ServerHandler.cpp
 )
-
 
 if(tests)
   set(UNIT_TESTS
