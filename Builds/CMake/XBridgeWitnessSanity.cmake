@@ -29,11 +29,10 @@ endif()
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang") # both Clang and AppleClang
   set(is_clang TRUE)
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND
-         CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${min_clang_version})
+    CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${min_clang_version})
     message(FATAL_ERROR "This project requires clang ${min_clang_version} or later")
-  endif()
   elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang" AND
-         CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${min_apple_clang_version})
+    CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${min_apple_clang_version})
     message(FATAL_ERROR "This project requires clang ${min_apple_clang_version} or later")
   endif()
 
