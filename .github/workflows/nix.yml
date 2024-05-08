@@ -1,5 +1,4 @@
 name: nix
-run-name: Build Linux
 on:
   pull_request:
   push:
@@ -60,8 +59,8 @@ jobs:
               version: 14
               cc: /usr/bin/clang-14
               cxx: /usr/bin/clang++-14
+    name: ${{ matrix.compiler }}-${{ matrix.profile.version }} - ${{ matrix.configuration }}
     runs-on: [self-hosted, x-heavy]
-    name: ${{ matrix.compiler }} - ${{ matrix.configuration }} - ${{ matrix.profile.version }}
     container: rippleci/rippled-build-ubuntu:aaf5e3e
     env:
       build_dir: .build
@@ -116,6 +115,7 @@ jobs:
           - Release
         cmake-args:
           - "-Dunity=ON"
+    name: Test ${{ matrix.compiler }}-${{ matrix.profile.version }} - ${{ matrix.configuration }}
     needs: dependencies
     runs-on: [self-hosted, x-heavy]
     container: rippleci/rippled-build-ubuntu:aaf5e3e
