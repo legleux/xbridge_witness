@@ -191,4 +191,3 @@ if(is_macos) # REVIEW: This doesn't seem necessary?
   list(GET FMT_INC_DIRS 0 FMT_INC_DIR)
   target_include_directories(${PROJECT_NAME} BEFORE PRIVATE ${FMT_INC_DIR})
 endif()
-include(packaging/package)
