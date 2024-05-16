@@ -41,10 +41,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(_DEBUG)
 endif()
 
-if(xbridge_witness_coverage)
-  set(coverage ${xbridge_witness_coverage} CACHE BOOL "gcc/clang only" FORCE)
-endif()
-
 # this one is a string and therefore can't be an option
 set(san "" CACHE STRING "On gcc & clang, add sanitizer instrumentation")
 set_property(CACHE san PROPERTY STRINGS ";undefined;memory;address;thread")
@@ -73,7 +69,9 @@ if(san)
 endif()
 
 include(XBridgeWitnessSanity)
-include(XBridgeWitnessCov)
+if(coverage)
+  include(XBridgeWitnessCov)
+endif()
 include(XBridgeWitnessInterface)
 
 set(HEADERS

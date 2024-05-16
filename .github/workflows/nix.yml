@@ -160,3 +160,80 @@ jobs:
       - name: test
         run: |
           ${build_dir}/xbridge_witnessd --unittest
+
+  coverage:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux
+        compiler:
+          - gcc
+        configuration:
+          - Debug
+    needs: dependencies
+    # runs-on: [self-hosted, x-heavy] # TODO: Use self-host when https://ripplelabs.atlassian.net/browse/RXIT-210 resolved
+    runs-on: ubuntu-latest
+    container: rippleci/rippled-build-ubuntu:aaf5e3e
+    env:
+      build_dir: .build
+    steps:
+      - name: download cache
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-${{ matrix.compiler }}-${{ matrix.configuration }}
+      - name: extract cache
+        run: |
+          mkdir -p ~/.conan
+          tar -xzf conan.tar -C ~/.conan
+      - name: install gcovr
+        run: pip install "gcovr>=7,<8"
+      - name: check environment
+        run: |
+          echo ${PATH} | tr ':' '\n'
+          conan --version
+          cmake --version
+          gcovr --version
+          env | sort
+          ls ~/.conan
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: dependencies
+        uses: ./.github/actions/dependencies
+        env:
+          CONAN_URL: http://18.143.149.228:8081/artifactory/api/conan/conan-non-prod
+        with:
+          configuration: ${{ matrix.configuration }}
+      - name: build
+        uses: ./.github/actions/build
+        with:
+          generator: Ninja
+          configuration: ${{ matrix.configuration }}
+          cmake-args: >-
+            -Dcoverage=ON
+            -Dcoverage_format=xml
+            -DCODE_COVERAGE_VERBOSE=ON
+            -DCMAKE_CXX_FLAGS="-O0"
+            -DCMAKE_C_FLAGS="-O0"
+          cmake-target: coverage
+      - name: move coverage report
+        shell: bash
+        run: |
+          mv "${build_dir}/coverage.xml" ./
+      - name: archive coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage.xml
+          path: coverage.xml
+          retention-days: 30
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: coverage.xml
+          badge: true
+          output: both
+          format: markdown
+          indicators: true
+          thresholds: '45 75'
+      - name: Show test results
+        run: cat code-coverage-results.md  >> $GITHUB_STEP_SUMMARY
