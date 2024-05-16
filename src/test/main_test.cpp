@@ -517,7 +517,7 @@ public:
     void
     onWriteNewLedger(boost::beast::error_code ec, std::size_t bytes_transferred)
     {
-        DBG(std::cout << e_.side()  << " session::onWriteNewLedger(), ec:" << ec
+        DBG(std::cout << e_.side() << " session::onWriteNewLedger(), ec:" << ec
                       << " bytes: " << bytes_transferred << std::endl;)
         boost::ignore_unused(bytes_transferred);
         if (ec == websocket::error::closed)
